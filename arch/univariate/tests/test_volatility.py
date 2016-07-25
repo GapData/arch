@@ -819,4 +819,3 @@ class TestVolatiltyProcesses(TestCase):
             EGARCH(p=0, o=0, q=1)
         with pytest.raises(ValueError):
             EGARCH(p=1, o=1, q=-1)
-

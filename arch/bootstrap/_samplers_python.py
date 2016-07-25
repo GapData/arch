@@ -1,4 +1,5 @@
 from __future__ import absolute_import, division
+
 from ..compat.numba import jit
 
 

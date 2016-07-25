@@ -13,7 +13,8 @@ from pandas import DataFrame
 from statsmodels.tools.decorators import cache_readonly
 from statsmodels.tsa.tsatools import lagmat
 
-from .base import ARCHModel, implicit_constant, ARCHModelResult
+from .base import (UnivariateARCHModel, implicit_constant,
+                   UnivariateARCHModelResult)
 from .distribution import Normal, StudentsT, SkewStudent
 from .volatility import ARCH, GARCH, HARCH, ConstantVariance, EGARCH
 from ..compat.python import range, iteritems
@@ -39,7 +40,7 @@ def align_forecast(f, align):
         raise ValueError('Unknown alignment')
 
 
-class HARX(ARCHModel):
+class HARX(UnivariateARCHModel):
     """
     Heterogeneous Autoregression (HAR), with optional exogenous regressors,
     model estimation and simulation
@@ -336,7 +337,7 @@ class HARX(ARCHModel):
         """Generates lag names.  Overridden by other models"""
         lags = self._lags
         names = []
-        var_name = self._y_series.name
+        var_name = self._y_pd.name
         if len(var_name) > 10:
             var_name = var_name[:4] + '...' + var_name[-3:]
         for i in range(lags.shape[1]):
@@ -475,13 +476,13 @@ class HARX(ARCHModel):
 
         Returns
         -------
-        result : ARCHModelResult
+        result : UnivariateARCHModelResult
             Results class containing parameter estimates, estimated parameter
             covariance and related estimates
 
         Notes
         -----
-        See :class:`ARCHModelResult` for details on computed results
+        See :class:`UnivariateARCHModelResult` for details on computed results
         """
         nobs = self._fit_y.shape[0]
         if nobs == 0:
@@ -513,9 +514,10 @@ class HARX(ARCHModel):
             if len(names) != num_params:
                 names = ['p' + str(i) for i in range(num_params)]
 
-            return ARCHModelResult(params, param_cov, 0.0, y, vol, cov_type,
-                                   self._y_series, names, loglikelihood,
-                                   self._is_pandas, _xopt, copy.deepcopy(self))
+            return UnivariateARCHModelResult(params, param_cov, 0.0, y, vol,
+                                             cov_type, self._y_pd, names,
+                                             loglikelihood, self._is_pandas,
+                                             _xopt, copy.deepcopy(self))
 
         regression_params = np.linalg.pinv(x).dot(y)
         xpxi = np.linalg.inv(x.T.dot(x) / nobs)
@@ -558,9 +560,10 @@ class HARX(ARCHModel):
         if len(names) != num_params:
             names = ['p' + str(i) for i in range(num_params)]
 
-        return ARCHModelResult(params, param_cov, r2, resids, vol, cov_type,
-                               self._y_series, names, loglikelihood,
-                               self._is_pandas, _xopt, copy.deepcopy(self))
+        return UnivariateARCHModelResult(params, param_cov, r2, resids, vol,
+                                         cov_type, self._y_pd, names,
+                                         loglikelihood, self._is_pandas,
+                                         _xopt, copy.deepcopy(self))
 
     def forecast(self, params, horizon=1, start=None, align='origin'):
         """
@@ -598,14 +601,14 @@ class HARX(ARCHModel):
         if start is None:
             start_loc = max(0, max_lag - 1)
         else:
-            start_loc = find_index(self._y_series, start)
+            start_loc = find_index(self._y_pd, start)
         if start_loc < (max_lag - 1):
             raise ValueError('Forecasts cannot be produced for observations '
                              'earlier than the maximum lag length.')
         t = self._y.shape[0]
         format_str = '{0:>0' + str(int(np.ceil(np.log10(horizon + 0.5)))) + '}'
         columns = ['h.' + format_str.format(h + 1) for h in range(horizon)]
-        forecasts = DataFrame(index=self._y_series.index,
+        forecasts = DataFrame(index=self._y_pd.index,
                               columns=columns,
                               dtype=np.float64)
         # Fast track for no lags
@@ -951,7 +954,7 @@ class ARX(HARX):
     def _generate_lag_names(self):
         lags = self._lags
         names = []
-        var_name = self._y_series.name
+        var_name = self._y_pd.name
         if len(var_name) > 10:
             var_name = var_name[:4] + '...' + var_name[-3:]
         for i in range(lags.shape[1]):

@@ -1,0 +1,2 @@
+class Normal(object):
+    pass

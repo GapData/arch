@@ -11,6 +11,7 @@ try:
 
     BytesIO = StringIO
     import cPickle
+
     pickle = cPickle
     import urllib2
     import urlparse
@@ -20,6 +21,7 @@ except ImportError:
 
     cStringIO = StringIO
     import pickle as cPickle
+
     pickle = cPickle
     import urllib.request
     import urllib.parse
@@ -32,6 +34,7 @@ if PY3:
     long = int
     string_types = str,
 
+
     def lmap(*args, **kwargs):
         return list(map(*args, **kwargs))
 else:
@@ -43,17 +46,20 @@ else:
 
 def with_metaclass(meta, *bases):
     """Create a base class with a metaclass."""
+
     # This requires a bit of explanation: the basic idea is to make a dummy
     # metaclass for one level of class instantiation that replaces itself with
     # the actual metaclass.
     class metaclass(meta):
         def __new__(cls, name, this_bases, d):
             return meta(name, bases, d)
+
     return type.__new__(metaclass, 'temporary_class', (), {})
 
 
 def add_metaclass(metaclass):
     """Class decorator for creating a class with a metaclass."""
+
     def wrapper(cls):
         orig_vars = cls.__dict__.copy()
         slots = orig_vars.get('__slots__')
@@ -65,6 +71,7 @@ def add_metaclass(metaclass):
         orig_vars.pop('__dict__', None)
         orig_vars.pop('__weakref__', None)
         return metaclass(cls.__name__, cls.__bases__, orig_vars)
+
     return wrapper
 
 

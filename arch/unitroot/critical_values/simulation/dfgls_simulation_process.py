@@ -1,10 +1,9 @@
 from __future__ import print_function
-from statsmodels.compat import range
+
 import numpy as np
 from scipy.stats import norm
-
+from statsmodels.compat import range
 from statsmodels.regression.linear_model import OLS, WLS
-
 
 trends = ('c', 'ct')
 critical_values = (1.0, 5.0, 10.0)

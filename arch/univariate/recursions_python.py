@@ -4,11 +4,12 @@ testing and if it isn't possible to install the Cython version using
 python setup.py install --no-binary
 """
 from __future__ import division, absolute_import
-from numpy import log
-import numpy as np
 
-from ..compat.python import range
+import numpy as np
+from numpy import log
+
 from ..compat.numba import jit
+from ..compat.python import range
 
 __all__ = ['harch_recursion', 'arch_recursion', 'garch_recursion',
            'egarch_recursion']
@@ -241,5 +242,6 @@ def egarch_recursion_python(parameters, resids, sigma2, p, o, q, nobs,
         abs_std_resids[t] = np.abs(std_resids[t])
 
     return sigma2
+
 
 egarch_recursion = jit(egarch_recursion_python)

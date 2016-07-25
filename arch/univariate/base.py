@@ -6,25 +6,30 @@ from ..compat.python import add_metaclass, range
 
 from copy import deepcopy
 from functools import partial
+
 import datetime as dt
 import warnings
+from copy import deepcopy
+from functools import partial
 
 import numpy as np
-from numpy.linalg import matrix_rank
-from numpy import ones, zeros, sqrt, diag, empty, ceil
-from scipy.optimize import fmin_slsqp
-import scipy.stats as stats
 import pandas as pd
-from statsmodels.tools.decorators import cache_readonly, resettable_cache
+import scipy.stats as stats
+from numpy import ones, zeros, sqrt, diag, empty, ceil
+from numpy.linalg import matrix_rank
+from scipy.optimize import fmin_slsqp
 from statsmodels.iolib.summary import Summary, fmt_2cols, fmt_params
 from statsmodels.iolib.table import SimpleTable
+from statsmodels.tools.decorators import cache_readonly, resettable_cache
 from statsmodels.tools.numdiff import approx_fprime, approx_hess
 
 from .distribution import Distribution, Normal
 from .volatility import VolatilityProcess, ConstantVariance
+from ..common.model import ARCHModel
 from ..utility.array import ensure1d, DocStringInheritor
 
-__all__ = ['implicit_constant', 'ARCHModelResult', 'ARCHModel']
+__all__ = ['implicit_constant', 'UnivariateARCHModelResult',
+           'UnivariateARCHModel']
 
 # Callback variables
 _callback_iter, _callback_llf = 0, 0.0,
@@ -33,6 +38,7 @@ _callback_func_count, _callback_iter_display = 0, 1
 
 class ConvergenceWarning(Warning):
     pass
+
 
 convergence_warning = """
 The optimizer returned code {code}. The message is:
@@ -43,6 +49,7 @@ See scipy.optimize.fmin_slsqp for code meaning.
 
 class StartingValueWarning(Warning):
     pass
+
 
 starting_value_warning = """
 Starting values do not satisfy the parameter constraints in the model.  The
@@ -144,7 +151,7 @@ def implicit_constant(x):
 
 
 @add_metaclass(DocStringInheritor)
-class ARCHModel(object):
+class UnivariateARCHModel(ARCHModel):
     """
     Abstract base class for mean models in ARCH processes.  Specifies the
     conditional mean process.
@@ -173,18 +180,12 @@ class ARCHModel(object):
         self.hold_back = hold_back
         self._hold_back = 0 if hold_back is None else hold_back
 
-        self._volatility = None
-        self._distribution = None
-        self._backcast = None
+        super(UnivariateARCHModel, self).__init__(y, volatility, distribution,
+                                                  hold_back)
 
-        if volatility is not None:
-            self.volatility = volatility
-        else:
+        if volatility is None:
             self.volatility = ConstantVariance()
-
-        if distribution is not None:
-            self.distribution = distribution
-        else:
+        if distribution is None:
             self.distribution = Normal()
 
     def constraints(self):
@@ -363,7 +364,7 @@ class ARCHModel(object):
         vol_final[first_obs:last_obs] = vol
 
         model_copy = deepcopy(self)
-        return ARCHModelFixedResult(params, resids, vol, self._y_series, names,
+        return ARCHModelFixedResult(params, resids, vol, self._y_pd, names,
                                     loglikelihood, self._is_pandas, model_copy)
 
     def _adjust_sample(self, first_obs, last_obs):
@@ -414,7 +415,7 @@ class ARCHModel(object):
 
         Returns
         -------
-        results : ARCHModelResult
+        results : UnivariateARCHModelResult
             Object containing model results
 
         Notes
@@ -553,9 +554,10 @@ class ARCHModel(object):
         vol_final[first_obs:last_obs] = vol
 
         model_copy = deepcopy(self)
-        return ARCHModelResult(params, None, r2, resids_final, vol_final,
-                               cov_type, self._y_series, names, loglikelihood,
-                               self._is_pandas, xopt, model_copy)
+        return UnivariateARCHModelResult(params, None, r2, resids_final,
+                                         vol_final, cov_type, self._y_pd,
+                                         names, loglikelihood,
+                                         self._is_pandas, xopt, model_copy)
 
     def parameter_names(self):
         """List of parameters names
@@ -1085,7 +1087,7 @@ class ARCHModelFixedResult(object):
         return fig
 
 
-class ARCHModelResult(ARCHModelFixedResult):
+class UnivariateARCHModelResult(ARCHModelFixedResult):
     """
     Results from estimation of an ARCHModel model
 
@@ -1168,9 +1170,10 @@ class ARCHModelResult(ARCHModelFixedResult):
     def __init__(self, params, param_cov, r2, resid, volatility, cov_type,
                  dep_var, names, loglikelihood, is_pandas, optim_output,
                  model):
-        super(ARCHModelResult, self).__init__(params, resid, volatility,
-                                              dep_var, names, loglikelihood,
-                                              is_pandas, model)
+        super(UnivariateARCHModelResult, self).__init__(params, resid,
+                                                        volatility, dep_var,
+                                                        names, loglikelihood,
+                                                        is_pandas, model)
 
         self._param_cov = param_cov
         self._r2 = r2

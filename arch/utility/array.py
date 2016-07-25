@@ -10,6 +10,7 @@ from pandas import DataFrame, Series, to_datetime, NaT, Timestamp
 
 from ..compat.pandas import is_datetime64_dtype
 from ..compat.python import long
+from ..compat.pandas import is_datetime64_dtype
 
 __all__ = ['ensure1d', 'parse_dataframe', 'DocStringInheritor',
            'date_to_index']
@@ -23,10 +24,7 @@ def ensure1d(x, name, series=False):
     if isinstance(x, Series):
         if not isinstance(x.name, str):
             x.name = str(x.name)
-        if series:
-            return x
-        else:
-            return np.asarray(x)
+        return x
 
     if isinstance(x, DataFrame):
         if x.shape[1] != 1:
@@ -35,10 +33,7 @@ def ensure1d(x, name, series=False):
             x = Series(x[x.columns[0]], x.index)
             if not isinstance(x.name, str):
                 x.name = str(x.name)
-        if series:
-            return x
-        else:
-            return np.asarray(x)
+        return x
 
     if not isinstance(x, np.ndarray):
         x = np.asarray(x)
@@ -55,21 +50,24 @@ def ensure1d(x, name, series=False):
         return np.asarray(x)
 
 
-def ensure2d(x, name):
+def ensure2d(x, name, dataframe=False):
     if isinstance(x, Series):
         return DataFrame(x)
     elif isinstance(x, DataFrame):
         return x
     elif isinstance(x, np.ndarray):
         if x.ndim == 0:
-            return np.asarray([[x]])
+            out = np.asarray([[x]])
         elif x.ndim == 1:
-            return x[:, None]
+            out = x[:, None]
         elif x.ndim == 2:
-            return x
+            out = x
         else:
             raise ValueError(
                 'Variable ' + name + 'must be 2d or reshapeable to 2d')
+        if dataframe:
+            out = DataFrame(x)
+        return out
     else:
         raise ValueError('Variable ' + name + 'must be 2d or ' +
                          'reshapeable to 2d')
