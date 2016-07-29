@@ -16,8 +16,9 @@ import datetime
 import time
 
 from IPython.parallel import Client
-from arch.compat.python import range, lmap
 from numpy import array, savez, percentile, nan
+
+from arch.compat.python import range, lmap
 
 # Time in seconds to sleep before checking if ready
 SLEEP = 10

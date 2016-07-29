@@ -1,5 +1,5 @@
-from ._version import __version__
 from .univariate.mean import arch_model
+from ._version import __version__
 
 
 def doc():

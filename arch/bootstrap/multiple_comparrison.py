@@ -4,11 +4,11 @@ from collections import OrderedDict
 
 import numpy as np
 import pandas as pd
-from arch.compat.python import add_metaclass, iteritems
-from arch.utility.array import DocStringInheritor, ensure2d
 
 from .base import StationaryBootstrap, CircularBlockBootstrap, \
     MovingBlockBootstrap
+from arch.compat.python import add_metaclass, iteritems
+from arch.utility.array import DocStringInheritor, ensure2d
 
 __all__ = ['StepM', 'SPA', 'RealityCheck']
 

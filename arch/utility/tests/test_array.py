@@ -3,7 +3,6 @@ import os
 from unittest import TestCase
 
 import numpy as np
-
 from numpy.testing import assert_equal
 from pandas import Series, DataFrame, date_range
 

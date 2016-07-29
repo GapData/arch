@@ -1,5 +1,4 @@
 from __future__ import absolute_import, division
-
 import warnings
 from unittest import TestCase
 
@@ -12,13 +11,11 @@ import pytest
 
 from arch.bootstrap import IIDBootstrap, StationaryBootstrap, \
     MovingBlockBootstrap, CircularBlockBootstrap
-from arch.bootstrap._samplers import \
-    stationary_bootstrap_sample as stationary_bootstrap_sample_cython
+from arch.bootstrap.base import _loo_jackknife
 from arch.bootstrap._samplers_python import (stationary_bootstrap_sample,
                                              stationary_bootstrap_sample_python)
-from arch.bootstrap.base import _loo_jackknife
-from numpy.testing import assert_equal, assert_raises, assert_allclose
-from pandas.util.testing import assert_frame_equal, assert_series_equal
+from arch.bootstrap._samplers import \
+    stationary_bootstrap_sample as stationary_bootstrap_sample_cython
 
 warnings.simplefilter("always", RuntimeWarning)
 warnings.simplefilter("always")

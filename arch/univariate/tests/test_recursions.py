@@ -1,10 +1,14 @@
 from unittest import TestCase
 import timeit
 
-import pytest
 import numpy as np
-from arch.compat.python import range
 from numpy.testing import assert_almost_equal
+from numpy.testing.decorators import skipif
+import pytest
+
+import arch.univariate.recursions as rec
+import arch.univariate.recursions_python as recpy
+from arch.compat.python import range
 
 try:
     import numba
@@ -12,9 +16,6 @@ try:
     missing_numba = False
 except ImportError:
     missing_numba = True
-
-import arch.univariate.recursions as rec
-import arch.univariate.recursions_python as recpy
 
 
 class Timer(object):

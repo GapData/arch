@@ -6,14 +6,13 @@ import pytest
 import numpy as np
 import pandas as pd
 import scipy.stats as stats
+from numpy import random, linspace
+from numpy.testing import assert_equal, assert_allclose
+from pandas.util.testing import assert_series_equal, assert_frame_equal
 
 from arch.bootstrap import (StationaryBootstrap, CircularBlockBootstrap,
                             MovingBlockBootstrap)
 from arch.bootstrap.multiple_comparrison import SPA, StepM, MCS
-from nose.tools import assert_true
-from numpy import random, linspace
-from numpy.testing import assert_equal, assert_allclose
-from pandas.util.testing import assert_series_equal, assert_frame_equal
 
 
 class TestSPA(TestCase):
@@ -247,7 +246,7 @@ class TestStepM(TestCase):
 
     def test_exact_ties(self):
         adj_models = self.models_df - 100.0
-        adj_models.iloc[:, :2] -= adj_models.iloc[:, :2].mean()
+        adj_models.iloc[:, :2] -= adj_models.iloc[:,:2].mean()
         adj_models.iloc[:, :2] += self.benchmark_df.mean().iloc[0]
         stepm = StepM(self.benchmark_df, adj_models, size=0.10)
         stepm.compute()

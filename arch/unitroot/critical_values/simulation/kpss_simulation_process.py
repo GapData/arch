@@ -1,8 +1,9 @@
 from __future__ import print_function
+from statsmodels.compat import iteritems, cStringIO
 
 import numpy as np
 import pandas as pd
-from statsmodels.compat import iteritems, cStringIO
+
 
 sio = cStringIO.StringIO()
 c = pd.read_hdf('kpss_critical_values.h5', 'c')

@@ -5,14 +5,15 @@ Distributions to use in ARCH models.  All distributions must inherit from
 """
 from __future__ import division, absolute_import
 
-import scipy.stats as stats
+from numpy.random import standard_normal, standard_t
 from numpy import (empty, array, sqrt, log, exp, sign, pi, sum, asarray,
                    ones_like)
-from numpy.random import standard_normal, standard_t
 from scipy.special import gammaln
+import scipy.stats as stats
 
 from ..compat.python import add_metaclass
 from ..utility.array import DocStringInheritor
+
 
 __all__ = ['Distribution', 'Normal', 'StudentsT', 'SkewStudent']
 
@@ -507,10 +508,8 @@ class SkewStudent(Distribution):
 
         """
         eta, lam = parameters
-        #        return gamma((eta+1)/2) / ((pi*(eta-2))**.5 * gamma(eta/2))
-        return (gammaln((eta + 1) / 2) -
-                gammaln(eta / 2) -
-                log(pi * (eta - 2)) / 2)
+#        return gamma((eta+1)/2) / ((pi*(eta-2))**.5 * gamma(eta/2))
+        return gammaln((eta+1)/2) - gammaln(eta/2) - log(pi*(eta-2))/2
 
     def ppf(self, arg, parameters):
         """Inverse cumulative density function (ICDF).

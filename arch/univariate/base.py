@@ -6,21 +6,18 @@ from ..compat.python import add_metaclass, range
 
 from copy import deepcopy
 from functools import partial
-
 import datetime as dt
 import warnings
-from copy import deepcopy
-from functools import partial
 
 import numpy as np
-import pandas as pd
-import scipy.stats as stats
-from numpy import ones, zeros, sqrt, diag, empty, ceil
 from numpy.linalg import matrix_rank
+from numpy import ones, zeros, sqrt, diag, empty, ceil
 from scipy.optimize import fmin_slsqp
+import scipy.stats as stats
+import pandas as pd
+from statsmodels.tools.decorators import cache_readonly, resettable_cache
 from statsmodels.iolib.summary import Summary, fmt_2cols, fmt_params
 from statsmodels.iolib.table import SimpleTable
-from statsmodels.tools.decorators import cache_readonly, resettable_cache
 from statsmodels.tools.numdiff import approx_fprime, approx_hess
 
 from .distribution import Distribution, Normal
@@ -39,7 +36,6 @@ _callback_func_count, _callback_iter_display = 0, 1
 class ConvergenceWarning(Warning):
     pass
 
-
 convergence_warning = """
 The optimizer returned code {code}. The message is:
 {string_message}
@@ -49,7 +45,6 @@ See scipy.optimize.fmin_slsqp for code meaning.
 
 class StartingValueWarning(Warning):
     pass
-
 
 starting_value_warning = """
 Starting values do not satisfy the parameter constraints in the model.  The
@@ -164,28 +159,16 @@ class UnivariateARCHModel(ARCHModel):
     def __init__(self, y=None, volatility=None, distribution=None,
                  hold_back=None):
 
-        # Set on model fit
-        self._fit_indices = None
-        self._fit_y = None
-
-        self._is_pandas = isinstance(y, (pd.DataFrame, pd.Series))
-        if y is not None:
-            self._y_series = ensure1d(y, 'y', series=True)
+        super(UnivariateARCHModel, self).__init__(y, volatility, distribution, hold_back)
+        self._y_series = self._y_pd
+        if volatility is not None:
+            self.volatility = volatility
         else:
-            self._y_series = ensure1d(empty((0,)), 'y', series=True)
-
-        self._y = np.asarray(self._y_series)
-        self._y_original = y
-
-        self.hold_back = hold_back
-        self._hold_back = 0 if hold_back is None else hold_back
-
-        super(UnivariateARCHModel, self).__init__(y, volatility, distribution,
-                                                  hold_back)
-
-        if volatility is None:
             self.volatility = ConstantVariance()
-        if distribution is None:
+
+        if distribution is not None:
+            self.distribution = distribution
+        else:
             self.distribution = Normal()
 
     def constraints(self):
@@ -364,7 +347,7 @@ class UnivariateARCHModel(ARCHModel):
         vol_final[first_obs:last_obs] = vol
 
         model_copy = deepcopy(self)
-        return ARCHModelFixedResult(params, resids, vol, self._y_pd, names,
+        return ARCHModelFixedResult(params, resids, vol, self._y_series, names,
                                     loglikelihood, self._is_pandas, model_copy)
 
     def _adjust_sample(self, first_obs, last_obs):
@@ -555,7 +538,7 @@ class UnivariateARCHModel(ARCHModel):
 
         model_copy = deepcopy(self)
         return UnivariateARCHModelResult(params, None, r2, resids_final,
-                                         vol_final, cov_type, self._y_pd,
+                                         vol_final, cov_type, self._y_series,
                                          names, loglikelihood,
                                          self._is_pandas, xopt, model_copy)
 

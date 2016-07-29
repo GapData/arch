@@ -24,7 +24,10 @@ def ensure1d(x, name, series=False):
     if isinstance(x, Series):
         if not isinstance(x.name, str):
             x.name = str(x.name)
-        return x
+        if series:
+            return x
+        else:
+            return np.asarray(x)
 
     if isinstance(x, DataFrame):
         if x.shape[1] != 1:
@@ -33,7 +36,10 @@ def ensure1d(x, name, series=False):
             x = Series(x[x.columns[0]], x.index)
             if not isinstance(x.name, str):
                 x.name = str(x.name)
-        return x
+        if series:
+            return x
+        else:
+            return np.asarray(x)
 
     if not isinstance(x, np.ndarray):
         x = np.asarray(x)
@@ -65,12 +71,13 @@ def ensure2d(x, name, dataframe=False):
         else:
             raise ValueError(
                 'Variable ' + name + 'must be 2d or reshapeable to 2d')
-        if dataframe:
-            out = DataFrame(x)
-        return out
     else:
         raise ValueError('Variable ' + name + 'must be 2d or ' +
                          'reshapeable to 2d')
+
+    if dataframe:
+        return DataFrame(out)
+    return out
 
 
 def parse_dataframe(x, name):
