@@ -1,0 +1,267 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Change Logs &mdash; arch 4.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="arch 4.0 documentation" href="index.html"/>
+        <link rel="prev" title="The Unit Root Tests" href="unitroot/tests.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> arch
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                4.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="univariate/univariate.html">Univariate Volatility Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bootstrap/bootstrap.html">Bootstrapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiple-comparison/multiple-comparisons.html">Multiple Comparison Problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="unitroot/unitroot.html">Unit Root Tests</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Change Log</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#changes-since-3-0">Changes since 3.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#changes-since-2-1">Changes since 2.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#changes-since-2-0">Changes since 2.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#changes-since-1-0">Changes since 1.0</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">arch</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Change Logs</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/changes.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="change-logs">
+<h1>Change Logs<a class="headerlink" href="#change-logs" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="changes-since-3-0">
+<h2>Changes since 3.0<a class="headerlink" href="#changes-since-3-0" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Added forecast code for mean forecasting</li>
+<li>Added volatility hedgehog plot</li>
+<li>Added <code class="docutils literal"><span class="pre">fix</span></code> to arch models which allows for user specified parameters
+instead of estimated parameters.</li>
+<li>Added Hansen&#8217;s Skew T distribution to distribution (Stanislav Khrapov)</li>
+<li>Updated IPython notebooks to latest IPython version</li>
+<li>Bug and typo fixes to IPython notebooks</li>
+<li>Changed MCS to give a pvalue of 1.0 to best model.  Previously was NaN</li>
+<li>Removed <code class="docutils literal"><span class="pre">hold_back</span></code> and <code class="docutils literal"><span class="pre">last_obs</span></code> from model initialization and to
+<code class="docutils literal"><span class="pre">fit</span></code> method to simplify estimating a model over laternative samples
+(e.g., rolling window estimation)</li>
+<li>Redefined <code class="docutils literal"><span class="pre">hold_back</span></code> to only accept integers so that is simply defined
+the number of observations held back. This number is now held out of the
+sample irrespective of the value of <code class="docutils literal"><span class="pre">first_obs</span></code>.</li>
+</ul>
+</div>
+<div class="section" id="changes-since-2-1">
+<h2>Changes since 2.1<a class="headerlink" href="#changes-since-2-1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Added multiple comparison procedures</li>
+<li>Typographical and other small changes</li>
+</ul>
+</div>
+<div class="section" id="changes-since-2-0">
+<h2>Changes since 2.0<a class="headerlink" href="#changes-since-2-0" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><dl class="first docutils">
+<dt>Add unit root tests:</dt>
+<dd><ul class="first last simple">
+<li>Augmented Dickey-Fuller</li>
+<li>Dickey-Fuller GLS</li>
+<li>Phillips-Perron</li>
+<li>KPSS</li>
+<li>Variance Ratio</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">Removed deprecated locations for ARCH modeling functions</p>
+</li>
+</ul>
+</div>
+<div class="section" id="changes-since-1-0">
+<h2>Changes since 1.0<a class="headerlink" href="#changes-since-1-0" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Refactored to move the univariate routines to <cite>arch.univariate</cite> and added
+deprecation warnings in the old locations</li>
+<li>Enable <cite>numba</cite> jit compilation in the python recursions</li>
+<li>Added a bootstrap framework, which will be used in future versions.
+The bootstrap framework is general purpose and can be used via high-level
+functions such as <cite>conf_int</cite> or <cite>cov</cite>, or as a low level iterator using
+<cite>bootstrap</cite></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="unitroot/tests.html" class="btn btn-neutral" title="The Unit Root Tests" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014-6, Kevin Sheppard.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'4.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
